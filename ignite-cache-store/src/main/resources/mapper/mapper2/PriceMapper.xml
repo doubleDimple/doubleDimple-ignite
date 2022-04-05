@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.doubledimple.ignite.ignitecache.mapper.dao2.PriceMapper">
+
+	<!--实体映射-->
+	<resultMap id="base_result_map" type="com.doubledimple.ignite.ignitecache.entity.pojo.Price">
+		<!--主键-->
+		<id column="id" property="id"  />
+
+		<id column="product_id" property="productId"  />
+		<!--价格-->
+		<result column="price" property="price"  />
+		<!---->
+		<result column="create_time" property="createTime"  />
+		<!---->
+		<result column="update_time" property="updateTime"  />
+	</resultMap>
+
+
+	<!-- 通用查询结果列-->
+	<sql id="base_column_list">
+		 `id`,`product_id`,`price`,`create_time`,`update_time`
+	</sql>
+
+	<sql id="base_condition_filed">
+			<if test="id != null">
+				 and  `id` = #{id}
+			</if>
+			<if test="productId != null">
+				and  `product_id` = #{productId}
+			</if>
+			<if test="price != null">
+				 and  `price` = #{price}
+			</if>
+			<if test="createTime != null">
+				 and  `create_time` = #{createTime}
+			</if>
+			<if test="updateTime != null">
+				 and  `update_time` = #{updateTime}
+			</if>
+	</sql>
+	<!-- 通用条件列-->
+	<sql id="base_condition">
+	 <where> <include refid="base_condition_filed" />	 </where>
+	</sql>
+
+	<!-- 通用查询条件列-->
+	<sql id="query_condition">
+	 <where>
+			<include refid="base_condition_filed" />
+			<if test="createTimeStart != null and createTimeStart !='' ">
+				 <![CDATA[ and  `create_time`>=str_to_date('${createTimeStart}', '%Y-%m-%d') ]]>
+			</if>
+			<if test="createTimeEnd!= null and createTimeEnd!=''">
+				 <![CDATA[ and  `create_time`< date_sub(str_to_date('${createTimeEnd}','%Y-%m-%d'),interval -1 day) ]]>
+			</if>
+			<if test="updateTimeStart != null and updateTimeStart !='' ">
+				 <![CDATA[ and  `update_time`>=str_to_date('${updateTimeStart}', '%Y-%m-%d') ]]>
+			</if>
+			<if test="updateTimeEnd!= null and updateTimeEnd!=''">
+				 <![CDATA[ and  `update_time`< date_sub(str_to_date('${updateTimeEnd}','%Y-%m-%d'),interval -1 day) ]]>
+			</if>
+	 </where>
+	</sql>
+
+	<!-- 查询集合-->
+	<select id="selectList" resultMap="base_result_map" >
+		 SELECT <include refid="base_column_list" /> FROM `price` <include refid="query_condition" />
+		 <if test="orderBy!=null">
+			 order by ${orderBy}
+		 </if>
+		 <if test="page!=null">
+			 limit #{page.start},#{page.end}
+		 </if>
+	</select>
+
+	<!-- 查询数量-->
+	<select id="selectCount" resultType="java.lang.Integer" >
+		 SELECT count(1) FROM `price` <include refid="query_condition" />
+	</select>
+
+	<!-- 插入 （匹配有值的字段）-->
+	<insert id="insert" parameterType="com.doubledimple.ignite.ignitecache.entity.pojo.Price">
+		<selectKey keyProperty="id" resultType="Long" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		 INSERT INTO `price`
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="price != null">
+				 `price`,
+			</if>
+			 <if test="productId != null">
+				 `product_id`,
+			 </if>
+			<if test="createTime != null">
+				 `create_time`,
+			</if>
+			<if test="updateTime != null">
+				 `update_time`,
+			</if>
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="price!=null">
+				 #{price},
+			</if>
+			 <if test="productId!=null">
+				 #{productId},
+			 </if>
+			<if test="createTime!=null">
+				 #{createTime},
+			</if>
+			<if test="updateTime!=null">
+				 #{updateTime},
+			</if>
+		 </trim>
+	</insert>
+
+	<!-- 插入 （根据表名称插入）-->
+	<insert id="insertWidthTableName" parameterType="com.doubledimple.ignite.ignitecache.entity.pojo.Price">
+		<selectKey keyProperty="bean.id" resultType="Long" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		 INSERT INTO `${tableName}`(`price`,`create_time`,`update_time`)values(
+			 #{bean.price},#{bean.createTime},#{bean.updateTime})
+		ON DUPLICATE KEY UPDATE 
+		`price` = values(`price`),`create_time` = values(`create_time`),`update_time` = values(`update_time`)
+	</insert>
+
+	<!-- 添加 （批量插入或修改）-->
+		<insert id="insertBatch" parameterType="com.doubledimple.ignite.ignitecache.entity.pojo.Price">
+		 INSERT INTO `price`
+		 <trim prefix="(" suffix=")" suffixOverrides=",">
+			`id`,
+		 <if test="list[0].price!= null">
+		 `price`,
+		 </if>
+			 <if test="list[0].product_id!= null">
+				 `product_id`,
+			 </if>
+		 <if test="list[0].create_time!= null">
+		 `create_time`,
+		 </if>
+		 <if test="list[0].update_time!= null">
+		 `update_time`,
+		 </if>
+		</trim>
+		values
+			 <foreach collection="list" item="item" separator=",">
+			<trim prefix="(" suffix=")" suffixOverrides=",">
+			#{item.id},
+		 <if test="list[0].price!= null">
+		 #{item.price},
+		 </if>
+				<if test="list[0].product_id!= null">
+					#{productId},
+				</if>
+		 <if test="list[0].create_time!= null">
+		 #{item.createTime},
+		 </if>
+		 <if test="list[0].update_time!= null">
+		 #{item.updateTime},
+		 </if>
+
+		</trim>
+		</foreach>
+		ON DUPLICATE KEY UPDATE 
+		
+		<trim suffixOverrides="," >
+		 <if test="list[0].price!= null">
+		 `price`= values(`price`),
+		 </if>
+			<if test="list[0].product_id!= null">
+				`product_id`= values(`product_id`),
+			</if>
+		 <if test="list[0].create_time!= null">
+		 `create_time`= values(`create_time`),
+		 </if>
+		 <if test="list[0].update_time!= null">
+		 `update_time`= values(`update_time`),
+		 </if>
+
+		</trim>
+		</insert>
+
+	<!-- 根据PrimaryKey修 改-->
+	<update id="updateByPrimaryKey" parameterType="com.doubledimple.ignite.ignitecache.entity.pojo.Price">
+		 UPDATE `price`
+ 		 <set> 
+			<if test="bean.price != null">
+				 `price` = #{bean.price},
+			</if>
+			 <if test="bean.productId != null">
+				 `product_id` = #{bean.productId},
+			 </if>
+			<if test="bean.createTime != null">
+				 `create_time` = #{bean.createTime},
+			</if>
+			<if test="bean.updateTime != null">
+				 `update_time` = #{bean.updateTime},
+			</if>
+ 		 </set>
+ 		 where `id`=#{id}
+	</update>
+
+	<!-- 根据PrimaryKey删除-->
+	<delete id="deleteByPrimaryKey">
+		delete from `price` where `id`=#{id}
+	</delete>
+
+	<!-- 根据PrimaryKey获取对象-->
+	<select id="selectByPrimaryKey" resultMap="base_result_map" >
+		select <include refid="base_column_list" /> from `price` where `id`=#{id}
+	</select>
+
+</mapper>
