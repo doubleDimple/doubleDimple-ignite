@@ -1,6 +1,5 @@
-package com.doubledimple.ignite.ignitecache.dtx;
+package com.doubledimple.ignite.ignitecache.utils;
 
-import com.doubledimple.ignite.ignitecache.store.mode1.MySqlDB1Store;
 import org.apache.ignite.cache.CacheAtomicityMode;
 import org.apache.ignite.configuration.CacheConfiguration;
 
@@ -13,11 +12,12 @@ public class CacheConfigurationUtils {
     private static final Boolean WRITE_BEHIND_ENABLED = true;
 
 
-    public static <T> CacheConfiguration<String,T> getCacheConfiguration(Class<T> type,String cacheName,Class factoryClazz){
+    @SuppressWarnings("unchecked")
+    public static <T> CacheConfiguration<String,T> getCacheConfiguration(Class<T> type,String cacheName,Class storeFactory){
         CacheConfiguration<String, T> cacheConfig = new CacheConfiguration<>();
         cacheConfig.setName(cacheName);
         cacheConfig.setAtomicityMode(CacheAtomicityMode.TRANSACTIONAL);
-        cacheConfig.setCacheStoreFactory(FactoryBuilder.factoryOf(factoryClazz));
+        cacheConfig.setCacheStoreFactory(FactoryBuilder.factoryOf(storeFactory));
         cacheConfig.setReadThrough(READ_THROUGH);
         cacheConfig.setWriteThrough(WRITE_THROUGH);
         cacheConfig.setWriteBehindEnabled(WRITE_BEHIND_ENABLED);
