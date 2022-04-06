@@ -13,6 +13,14 @@ import java.util.Date;
 @SuppressWarnings("serial")
 public class Price implements Serializable {
 
+	public Price() {
+	}
+
+	public Price(Long id, BigDecimal price, Long productId){
+		this.id = id;
+		this.productId = productId;
+		this.price = price;
+	}
 
 	/**
 	 * 主键

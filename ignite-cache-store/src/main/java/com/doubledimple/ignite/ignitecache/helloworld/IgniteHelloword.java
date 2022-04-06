@@ -1,6 +1,6 @@
 package com.doubledimple.ignite.ignitecache.helloworld;
 
-import com.doubledimple.ignite.ignitecache.store.MySqlDBStore;
+import com.doubledimple.ignite.ignitecache.store.mode1.MySqlDB1Store;
 import org.apache.ignite.Ignite;
 import org.apache.ignite.IgniteCache;
 import org.apache.ignite.IgniteException;
@@ -18,7 +18,6 @@ import org.slf4j.LoggerFactory;
 import javax.cache.configuration.FactoryBuilder;
 import java.util.Collections;
 
-import static org.apache.ignite.cache.CacheMode.PARTITIONED;
 import static org.apache.ignite.cache.CacheMode.REPLICATED;
 
 public class IgniteHelloword {
@@ -44,7 +43,7 @@ public class IgniteHelloword {
         configuration.setName("product");
         configuration.setAtomicityMode(CacheAtomicityMode.TRANSACTIONAL);
         configuration.setCacheMode(REPLICATED);
-        configuration.setCacheStoreFactory(FactoryBuilder.factoryOf(MySqlDBStore.class));
+        configuration.setCacheStoreFactory(FactoryBuilder.factoryOf(MySqlDB1Store.class));
         configuration.setReadThrough(true);
         configuration.setWriteThrough(true);
         configuration.setWriteBehindEnabled(true);

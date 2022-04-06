@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
 import javax.sql.DataSource;
@@ -39,6 +40,12 @@ public class DataSourceConfigDs2 {
     public DataSourceTransactionManager ds2TransactionManager(@Qualifier("ds2DataSource") DataSource dataSource) {
          return new DataSourceTransactionManager(dataSource);
      }
+
+    //@Bean(value = "namedParameterJdbcTemplateDs2")
+    @Bean(value = "namedParameterJdbcTemplateDs2")
+    public NamedParameterJdbcTemplate ds2JdbcTemplete(@Qualifier("ds2DataSource") DataSource dataSource){
+        return new NamedParameterJdbcTemplate(dataSource);
+    }
 
      @Bean
      @Primary

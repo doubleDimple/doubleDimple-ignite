@@ -44,11 +44,10 @@ public class DataSourceConfigDs1 {
          return new DataSourceTransactionManager(dataSource);
      }
 
-     @Bean
-     @Primary
+    @Bean(value = "namedParameterJdbcTemplateDs1")
+    @Primary
      public NamedParameterJdbcTemplate ds1JdbcTemplete(@Qualifier("ds1DataSource") DataSource dataSource){
-         NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
-         return namedParameterJdbcTemplate;
+         return new NamedParameterJdbcTemplate(dataSource);
      }
 
      @Bean

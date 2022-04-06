@@ -14,6 +14,10 @@ import java.util.Date;
 @SuppressWarnings("serial")
 public class Product implements Serializable {
 
+
+	public Product() {
+	}
+
 	public Product(Long id, String name) {
 		this.id = id;
 		this.name = name;
