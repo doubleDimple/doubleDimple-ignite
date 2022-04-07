@@ -18,7 +18,6 @@ public class IgniteDisTransTemplate {
     @Autowired
     private Ignite ignite;
 
-
     public void disTrans(TransactionConcurrency transactionConcurrency, TransactionIsolation transactionIsolation,IgniteTransService igniteTransService){
 
         LOGGER.info("ignite transactional start.....");

@@ -28,12 +28,10 @@ import static org.apache.ignite.transactions.TransactionIsolation.REPEATABLE_REA
 @SpringBootTest(classes = IgniteCacheStoreApplication.class)
 public class StoreTest {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(StoreTest.class);
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(StoreTest.class);
 
     @Autowired
     private IgniteDisTransTemplate igniteDisTransTemplate;
-
 
     @Autowired
     private Ignite ignite;
@@ -61,6 +59,8 @@ public class StoreTest {
             productIgniteCache.put(PRODUCT_CACHE_NAME_KEY+i,product);
             priceIgniteCache.put(PRICE_CACHE_NAME_KEY+i,price);
         });
+
+        LOGGER.info("business handler complete.....");
 
     }
 }
